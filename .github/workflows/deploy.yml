@@ -1,0 +1,31 @@
+name: CI/CD Docker
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Lấy code từ repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Login Docker Hub
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      # 3. Build & Push image
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            vietdo2k4/doquocviet3660:latest
+            vietdo2k4/doquocviet3660:${{ github.sha }}
